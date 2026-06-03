@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CyberSentinel — Cybersecurity Services</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#04080f;
+  --bg2:#070d1a;
+  --bg3:#0b1220;
+  --green:#00ff88;
+  --green2:#00cc6a;
+  --green-dim:rgba(0,255,136,0.08);
+  --green-glow:rgba(0,255,136,0.15);
+  --red:#ff3366;
+  --blue:#00b4ff;
+  --text:#c8d8e8;
+  --text2:#6a8aaa;
+  --text3:#2a4a6a;
+  --border:rgba(0,255,136,0.12);
+  --border2:rgba(0,255,136,0.25);
+  --mono:'Share Tech Mono',monospace;
+  --display:'Orbitron',sans-serif;
+  --body:'Exo 2',sans-serif;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--body);overflow-x:hidden;cursor:none;}
+
+/* CUSTOM CURSOR */
+.cursor{position:fixed;width:12px;height:12px;border:1.5px solid var(--green);border-radius:50%;pointer-events:none;z-index:99999;transition:transform 0.1s;mix-blend-mode:screen;}
+.cursor-trail{position:fixed;width:32px;height:32px;border:1px solid rgba(0,255,136,0.3);border-radius:50%;pointer-events:none;z-index:99998;transition:all 0.15s ease;}
+
+/* SCANLINES */
+body::after{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,255,136,0.008) 3px,rgba(0,255,136,0.008) 4px);pointer-events:none;z-index:9990;}
+
+/* NAVBAR */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:18px 60px;display:flex;align-items:center;justify-content:space-between;background:rgba(4,8,15,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:var(--display);font-size:16px;font-weight:900;color:var(--green);letter-spacing:4px;text-decoration:none;}
+.nav-logo span{color:var(--text2);}
+.nav-links{display:flex;gap:36px;list-style:none;}
+.nav-links a{font-family:var(--mono);font-size:11px;color:var(--text2);text-decoration:none;letter-spacing:2px;text-transform:uppercase;transition:color 0.2s;position:relative;}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--green);transition:width 0.3s;}
+.nav-links a:hover{color:var(--green);}
+.nav-links a:hover::after{width:100%;}
+.nav-cta{font-family:var(--mono);font-size:11px;padding:9px 22px;border:1px solid var(--green);color:var(--green);background:transparent;border-radius:4px;cursor:pointer;letter-spacing:2px;text-transform:uppercase;transition:all 0.2s;text-decoration:none;}
+.nav-cta:hover{background:var(--green);color:var(--bg);}
+
+/* ═══════════════════════════════════
+   HERO SLIDER
+═══════════════════════════════════ */
+.hero{position:relative;height:100vh;overflow:hidden;}
+.slides-wrap{display:flex;width:300%;height:100%;transition:transform 0.9s cubic-bezier(0.77,0,0.175,1);}
+.slide{width:33.333%;height:100%;position:relative;display:flex;align-items:center;flex-shrink:0;}
+
+/* Slide backgrounds */
+.slide-1{background:radial-gradient(ellipse at 70% 50%,rgba(0,255,136,0.06) 0%,transparent 60%),var(--bg);}
+.slide-2{background:radial-gradient(ellipse at 30% 50%,rgba(0,180,255,0.06) 0%,transparent 60%),var(--bg2);}
+.slide-3{background:radial-gradient(ellipse at 50% 40%,rgba(255,51,102,0.06) 0%,transparent 60%),var(--bg);}
+
+/* HEX GRID BG */
+.hex-bg{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0.06;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100'%3E%3Cpolygon points='28,2 54,17 54,47 28,62 2,47 2,17' fill='none' stroke='%2300ff88' stroke-width='0.5'/%3E%3Cpolygon points='28,52 54,67 54,97 28,112 2,97 2,67' fill='none' stroke='%2300ff88' stroke-width='0.5'/%3E%3C/svg%3E");}
+
+.slide-content{position:relative;z-index:2;padding:0 60px;max-width:680px;}
+.slide-tag{font-family:var(--mono);font-size:10px;color:var(--green);letter-spacing:4px;text-transform:uppercase;margin-bottom:20px;display:flex;align-items:center;gap:10px;opacity:0;transform:translateY(20px);transition:all 0.6s 0.3s;}
+.slide-tag::before{content:'';width:30px;height:1px;background:var(--green);}
+.slide h1{font-family:var(--display);font-size:clamp(32px,4vw,56px);font-weight:900;line-height:1.1;margin-bottom:22px;opacity:0;transform:translateY(30px);transition:all 0.7s 0.5s;}
+.slide-1 h1{color:#fff;}
+.slide-2 h1{color:#fff;}
+.slide-3 h1{color:#fff;}
+.slide h1 span{color:var(--green);}
+.slide-2 h1 span{color:var(--blue);}
+.slide-3 h1 span{color:var(--red);}
+.slide p{font-size:16px;color:var(--text2);line-height:1.8;margin-bottom:36px;max-width:500px;font-weight:300;opacity:0;transform:translateY(20px);transition:all 0.6s 0.7s;}
+.slide-btns{display:flex;gap:14px;opacity:0;transform:translateY(20px);transition:all 0.6s 0.9s;}
+.btn-primary{font-family:var(--mono);font-size:12px;padding:13px 30px;background:var(--green);color:var(--bg);border:none;border-radius:4px;cursor:pointer;letter-spacing:2px;text-transform:uppercase;font-weight:700;transition:all 0.2s;text-decoration:none;display:inline-block;}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,255,136,0.3);}
+.slide-2 .btn-primary{background:var(--blue);box-shadow:none;}
+.slide-2 .btn-primary:hover{box-shadow:0 8px 24px rgba(0,180,255,0.3);}
+.slide-3 .btn-primary{background:var(--red);}
+.slide-3 .btn-primary:hover{box-shadow:0 8px 24px rgba(255,51,102,0.3);}
+.btn-ghost{font-family:var(--mono);font-size:12px;padding:13px 30px;background:transparent;color:var(--text);border:1px solid rgba(255,255,255,0.2);border-radius:4px;cursor:pointer;letter-spacing:2px;text-transform:uppercase;transition:all 0.2s;text-decoration:none;display:inline-block;}
+.btn-ghost:hover{border-color:var(--green);color:var(--green);}
+
+/* ACTIVE SLIDE ANIMATIONS */
+.slide.active .slide-tag,.slide.active h1,.slide.active p,.slide.active .slide-btns{opacity:1;transform:translateY(0);}
+
+/* VISUAL RIGHT SIDE */
+.slide-visual{position:absolute;right:60px;top:50%;transform:translateY(-50%);width:380px;height:380px;z-index:2;}
+.hex-ring{position:absolute;border:1px solid;border-radius:50%;animation:spin linear infinite;}
+.hex-ring-1{width:100%;height:100%;top:0;left:0;border-color:rgba(0,255,136,0.15);animation-duration:20s;}
+.hex-ring-2{width:75%;height:75%;top:12.5%;left:12.5%;border-color:rgba(0,255,136,0.2);animation-duration:14s;animation-direction:reverse;}
+.hex-ring-3{width:50%;height:50%;top:25%;left:25%;border-color:rgba(0,255,136,0.3);animation-duration:9s;}
+@keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}  }
+.hex-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:120px;height:120px;background:var(--green-dim);border:1px solid var(--border2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:48px;}
+.orbit-dot{position:absolute;width:8px;height:8px;background:var(--green);border-radius:50%;box-shadow:0 0 10px var(--green);}
+.slide-2 .hex-ring-1{border-color:rgba(0,180,255,0.15);}
+.slide-2 .hex-ring-2{border-color:rgba(0,180,255,0.2);}
+.slide-2 .hex-ring-3{border-color:rgba(0,180,255,0.3);}
+.slide-2 .hex-center{background:rgba(0,180,255,0.08);border-color:rgba(0,180,255,0.3);}
+.slide-2 .orbit-dot{background:var(--blue);box-shadow:0 0 10px var(--blue);}
+.slide-3 .hex-ring-1{border-color:rgba(255,51,102,0.15);}
+.slide-3 .hex-ring-2{border-color:rgba(255,51,102,0.2);}
+.slide-3 .hex-ring-3{border-color:rgba(255,51,102,0.3);}
+.slide-3 .hex-center{background:rgba(255,51,102,0.08);border-color:rgba(255,51,102,0.3);}
+.slide-3 .orbit-dot{background:var(--red);box-shadow:0 0 10px var(--red);}
+
+/* SLIDE INDICATORS */
+.slide-indicators{position:absolute;bottom:40px;left:60px;display:flex;gap:10px;z-index:10;}
+.indicator{width:30px;height:2px;background:rgba(255,255,255,0.2);cursor:pointer;transition:all 0.3s;border-radius:1px;}
+.indicator.active{width:60px;background:var(--green);}
+.slide-counter{position:absolute;bottom:40px;right:60px;font-family:var(--mono);font-size:11px;color:var(--text3);z-index:10;}
+.slide-counter span{color:var(--green);}
+
+/* ARROW BUTTONS */
+.slide-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:10;width:48px;height:48px;border:1px solid var(--border2);background:rgba(0,0,0,0.4);border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--green);transition:all 0.2s;backdrop-filter:blur(8px);}
+.slide-arrow:hover{background:var(--green-dim);border-color:var(--green);}
+.slide-prev{left:20px;}
+.slide-next{right:20px;}
+
+/* SCROLL HINT */
+.scroll-hint{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:2px;z-index:10;}
+.scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,var(--green),transparent);animation:scrollAnim 1.5s infinite;}
+@keyframes scrollAnim{0%{transform:scaleY(0);transform-origin:top;}50%{transform:scaleY(1);transform-origin:top;}51%{transform:scaleY(1);transform-origin:bottom;}100%{transform:scaleY(0);transform-origin:bottom;}}
+
+/* ═══════════════════════════════════
+   STATS BAR
+═══════════════════════════════════ */
+.stats-bar{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:28px 60px;display:grid;grid-template-columns:repeat(4,1fr);}
+.stat-item{text-align:center;padding:0 20px;border-right:1px solid var(--border);}
+.stat-item:last-child{border-right:none;}
+.stat-num{font-family:var(--display);font-size:32px;font-weight:900;color:var(--green);margin-bottom:4px;}
+.stat-label{font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;}
+
+/* ═══════════════════════════════════
+   SERVICES SECTION
+═══════════════════════════════════ */
+.section{padding:100px 60px;}
+.section-header{text-align:center;margin-bottom:64px;}
+.section-tag{font-family:var(--mono);font-size:10px;color:var(--green);letter-spacing:4px;text-transform:uppercase;margin-bottom:12px;}
+.section-title{font-family:var(--display);font-size:clamp(24px,3vw,40px);font-weight:700;color:#fff;margin-bottom:16px;}
+.section-title span{color:var(--green);}
+.section-sub{font-size:15px;color:var(--text2);max-width:520px;margin:0 auto;line-height:1.8;}
+
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.service-card{background:var(--bg2);padding:36px 30px;position:relative;overflow:hidden;transition:background 0.3s;cursor:default;}
+.service-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--green);transform:scaleX(0);transform-origin:left;transition:transform 0.4s;}
+.service-card:hover::before{transform:scaleX(1);}
+.service-card:hover{background:var(--bg3);}
+.service-icon{width:52px;height:52px;border:1px solid var(--border2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:20px;background:var(--green-dim);transition:all 0.3s;}
+.service-card:hover .service-icon{background:rgba(0,255,136,0.15);border-color:var(--green);transform:scale(1.05);}
+.service-card:nth-child(2) .service-icon{background:rgba(0,180,255,0.08);border-color:rgba(0,180,255,0.3);}
+.service-card:nth-child(2):hover .service-icon{background:rgba(0,180,255,0.15);}
+.service-card:nth-child(3) .service-icon{background:rgba(255,51,102,0.08);border-color:rgba(255,51,102,0.3);}
+.service-card:nth-child(4) .service-icon{background:rgba(255,170,0,0.08);border-color:rgba(255,170,0,0.3);}
+.service-card:nth-child(5) .service-icon{background:rgba(150,100,255,0.08);border-color:rgba(150,100,255,0.3);}
+.service-card:nth-child(6) .service-icon{background:rgba(0,255,136,0.08);}
+.service-name{font-family:var(--display);font-size:14px;font-weight:700;color:#fff;letter-spacing:1px;margin-bottom:10px;}
+.service-desc{font-size:13px;color:var(--text2);line-height:1.8;margin-bottom:18px;}
+.service-tags{display:flex;flex-wrap:wrap;gap:6px;}
+.tag{font-family:var(--mono);font-size:9px;padding:3px 8px;border:1px solid var(--border);border-radius:3px;color:var(--text3);letter-spacing:1px;}
+.service-card:nth-child(2)::before{background:var(--blue);}
+.service-card:nth-child(3)::before{background:var(--red);}
+.service-card:nth-child(4)::before{background:#ffaa00;}
+.service-card:nth-child(5)::before{background:#9664ff;}
+
+/* ═══════════════════════════════════
+   WHY US
+═══════════════════════════════════ */
+.why-section{padding:100px 60px;background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
+.why-left .section-tag{text-align:left;}
+.why-left .section-title{text-align:left;}
+.why-left .section-sub{text-align:left;margin:0 0 36px;}
+.why-features{display:flex;flex-direction:column;gap:16px;}
+.why-feat{display:flex;gap:16px;align-items:flex-start;padding:16px;border:1px solid var(--border);border-radius:8px;background:var(--bg);transition:border-color 0.3s;}
+.why-feat:hover{border-color:var(--border2);}
+.feat-icon{width:36px;height:36px;min-width:36px;background:var(--green-dim);border:1px solid var(--border2);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.feat-name{font-family:var(--mono);font-size:12px;color:var(--green);margin-bottom:4px;letter-spacing:1px;}
+.feat-desc{font-size:12px;color:var(--text2);line-height:1.6;}
+.why-right{position:relative;}
+.terminal{background:var(--bg);border:1px solid var(--border2);border-radius:10px;overflow:hidden;font-family:var(--mono);}
+.terminal-bar{padding:10px 16px;background:var(--bg3);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px;}
+.tb-dot{width:10px;height:10px;border-radius:50%;}
+.terminal-body{padding:20px;font-size:12px;line-height:2;}
+.t-g{color:var(--green);}
+.t-b{color:var(--blue);}
+.t-r{color:var(--red);}
+.t-w{color:var(--text2);}
+.t-d{color:var(--text3);}
+.blink{animation:blink 1s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+
+/* ═══════════════════════════════════
+   PRICING
+═══════════════════════════════════ */
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:900px;margin:0 auto;}
+.price-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:36px 28px;position:relative;transition:all 0.3s;}
+.price-card.featured{border-color:var(--green);background:var(--bg3);}
+.price-card.featured::before{content:'MOST POPULAR';position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:var(--green);color:var(--bg);font-family:var(--mono);font-size:9px;padding:4px 14px;letter-spacing:2px;border-radius:0 0 6px 6px;}
+.price-card:hover{transform:translateY(-4px);}
+.price-name{font-family:var(--display);font-size:12px;font-weight:700;letter-spacing:3px;color:var(--text2);text-transform:uppercase;margin-bottom:16px;}
+.price-amount{font-family:var(--display);font-size:40px;font-weight:900;color:#fff;margin-bottom:4px;}
+.price-amount span{font-size:16px;color:var(--text2);}
+.price-period{font-family:var(--mono);font-size:10px;color:var(--text3);margin-bottom:24px;}
+.price-features{list-style:none;margin-bottom:28px;display:flex;flex-direction:column;gap:10px;}
+.price-features li{font-family:var(--mono);font-size:11px;color:var(--text2);display:flex;align-items:center;gap:8px;}
+.price-features li::before{content:'▸';color:var(--green);font-size:10px;}
+.price-features li.no::before{content:'✗';color:var(--text3);}
+.price-features li.no{color:var(--text3);}
+.price-btn{width:100%;padding:12px;font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;border-radius:6px;cursor:pointer;transition:all 0.2s;font-weight:700;}
+.price-btn-outline{background:transparent;border:1px solid var(--border2);color:var(--text2);}
+.price-btn-outline:hover{border-color:var(--green);color:var(--green);}
+.price-btn-fill{background:var(--green);border:1px solid var(--green);color:var(--bg);}
+.price-btn-fill:hover{box-shadow:0 6px 20px rgba(0,255,136,0.3);transform:translateY(-1px);}
+
+/* ═══════════════════════════════════
+   CTA SECTION
+═══════════════════════════════════ */
+.cta-section{padding:100px 60px;text-align:center;position:relative;overflow:hidden;}
+.cta-section::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(0,255,136,0.05) 0%,transparent 70%);pointer-events:none;}
+.cta-title{font-family:var(--display);font-size:clamp(28px,4vw,52px);font-weight:900;color:#fff;margin-bottom:16px;}
+.cta-title span{color:var(--green);}
+.cta-sub{font-size:16px;color:var(--text2);margin-bottom:40px;max-width:480px;margin-left:auto;margin-right:auto;line-height:1.8;}
+.cta-btns{display:flex;gap:14px;justify-content:center;}
+
+/* ═══════════════════════════════════
+   FOOTER
+═══════════════════════════════════ */
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:48px 60px 28px;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px;}
+.footer-brand .nav-logo{font-size:14px;display:block;margin-bottom:12px;}
+.footer-brand p{font-size:13px;color:var(--text2);line-height:1.8;max-width:260px;}
+.footer-col h4{font-family:var(--mono);font-size:10px;color:var(--green);letter-spacing:3px;text-transform:uppercase;margin-bottom:16px;}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:9px;}
+.footer-col ul a{font-size:13px;color:var(--text2);text-decoration:none;transition:color 0.2s;}
+.footer-col ul a:hover{color:var(--green);}
+.footer-bottom{padding-top:24px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:var(--text3);}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  nav{padding:16px 24px;}
+  .nav-links{display:none;}
+  .slide-content{padding:0 24px;}
+  .slide-visual{display:none;}
+  .section{padding:60px 24px;}
+  .stats-bar{padding:24px;grid-template-columns:repeat(2,1fr);gap:20px;}
+  .stat-item{border-right:none;}
+  .services-grid{grid-template-columns:1fr;}
+  .why-section{padding:60px 24px;}
+  .why-grid{grid-template-columns:1fr;gap:40px;}
+  .pricing-grid{grid-template-columns:1fr;max-width:380px;}
+  .cta-section{padding:60px 24px;}
+  .footer-grid{grid-template-columns:1fr 1fr;}
+  footer{padding:40px 24px 24px;}
+  .cta-btns{flex-direction:column;align-items:center;}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-trail" id="cursor-trail"></div>
+
+<!-- NAVBAR -->
+<nav>
+  <a class="nav-logo" href="#">CYBER<span>SENTINEL</span></a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#why">Why Us</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Get Protected</a>
+</nav>
+
+<!-- HERO SLIDER -->
+<section class="hero" id="hero">
+  <div class="slides-wrap" id="slidesWrap">
+
+    <!-- SLIDE 1 -->
+    <div class="slide slide-1 active">
+      <div class="hex-bg"></div>
+      <div class="slide-content">
+        <div class="slide-tag">Trusted by 500+ enterprises</div>
+        <h1>Defend Your<br><span>Digital Infrastructure</span><br>24/7</h1>
+        <p>Advanced threat detection, real-time monitoring, and rapid incident response — protecting your network before attackers strike.</p>
+        <div class="slide-btns">
+          <a href="#services" class="btn-primary">Explore Services</a>
+          <a href="#why" class="btn-ghost">Learn More</a>
+        </div>
+      </div>
+      <div class="slide-visual">
+        <div class="hex-ring hex-ring-1"></div>
+        <div class="hex-ring hex-ring-2"></div>
+        <div class="hex-ring hex-ring-3"></div>
+        <div class="hex-center">🛡️</div>
+        <div class="orbit-dot" id="dot1"></div>
+      </div>
+    </div>
+
+    <!-- SLIDE 2 -->
+    <div class="slide slide-2">
+      <div class="hex-bg"></div>
+      <div class="slide-content">
+        <div class="slide-tag">AI-Powered Security</div>
+        <h1>Intelligent <span>Threat</span><br>Detection Engine</h1>
+        <p>Our AI model analyzes millions of network events per second, identifying zero-day exploits and anomalies that traditional tools miss.</p>
+        <div class="slide-btns">
+          <a href="#services" class="btn-primary">See How It Works</a>
+          <a href="#pricing" class="btn-ghost">View Plans</a>
+        </div>
+      </div>
+      <div class="slide-visual">
+        <div class="hex-ring hex-ring-1"></div>
+        <div class="hex-ring hex-ring-2"></div>
+        <div class="hex-ring hex-ring-3"></div>
+        <div class="hex-center">🔍</div>
+        <div class="orbit-dot" id="dot2"></div>
+      </div>
+    </div>
+
+    <!-- SLIDE 3 -->
+    <div class="slide slide-3">
+      <div class="hex-bg"></div>
+      <div class="slide-content">
+        <div class="slide-tag">Incident Response</div>
+        <h1>Zero Breach<br><span>Tolerance.</span><br>Maximum Response.</h1>
+        <p>When threats are detected, our automated response system isolates, contains, and eliminates them — often before you even know they exist.</p>
+        <div class="slide-btns">
+          <a href="#contact" class="btn-primary">Start Free Audit</a>
+          <a href="#services" class="btn-ghost">Our Services</a>
+        </div>
+      </div>
+      <div class="slide-visual">
+        <div class="hex-ring hex-ring-1"></div>
+        <div class="hex-ring hex-ring-2"></div>
+        <div class="hex-ring hex-ring-3"></div>
+        <div class="hex-center">⚡</div>
+        <div class="orbit-dot" id="dot3"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Controls -->
+  <button class="slide-arrow slide-prev" onclick="changeSlide(-1)">&#8592;</button>
+  <button class="slide-arrow slide-next" onclick="changeSlide(1)">&#8594;</button>
+  <div class="slide-indicators">
+    <div class="indicator active" onclick="goSlide(0)"></div>
+    <div class="indicator" onclick="goSlide(1)"></div>
+    <div class="indicator" onclick="goSlide(2)"></div>
+  </div>
+  <div class="slide-counter"><span id="cur-slide">01</span> / 03</div>
+  <div class="scroll-hint">
+    <span>SCROLL</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat-item"><div class="stat-num" id="s1">0</div><div class="stat-label">Threats Blocked Daily</div></div>
+  <div class="stat-item"><div class="stat-num" id="s2">0</div><div class="stat-label">Clients Protected</div></div>
+  <div class="stat-item"><div class="stat-num" id="s3">0</div><div class="stat-label">Response Time (ms)</div></div>
+  <div class="stat-item"><div class="stat-num" id="s4">0</div><div class="stat-label">Uptime Guarantee</div></div>
+</div>
+
+<!-- SERVICES -->
+<section class="section" id="services">
+  <div class="section-header">
+    <div class="section-tag">What We Offer</div>
+    <div class="section-title">Our <span>Security</span> Services</div>
+    <p class="section-sub">End-to-end cybersecurity solutions tailored for businesses of every size — from startups to enterprise.</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon">🛡️</div>
+      <div class="service-name">Network Monitoring</div>
+      <p class="service-desc">24/7 real-time surveillance of your entire network. We detect intrusions, anomalies, and suspicious behavior the moment they appear.</p>
+      <div class="service-tags"><span class="tag">IDS/IPS</span><span class="tag">SIEM</span><span class="tag">24/7</span></div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🔍</div>
+      <div class="service-name">Vulnerability Assessment</div>
+      <p class="service-desc">Comprehensive scanning of your systems to identify security weaknesses before attackers exploit them. Detailed reports with fix guidance.</p>
+      <div class="service-tags"><span class="tag">CVE Scanning</span><span class="tag">Pen Testing</span><span class="tag">Reports</span></div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🔐</div>
+      <div class="service-name">Endpoint Protection</div>
+      <p class="service-desc">Secure every device on your network — laptops, servers, mobile — with next-gen antivirus, EDR, and zero-trust enforcement.</p>
+      <div class="service-tags"><span class="tag">EDR</span><span class="tag">Zero Trust</span><span class="tag">MDM</span></div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">⚡</div>
+      <div class="service-name">Incident Response</div>
+      <p class="service-desc">When a breach happens, every second matters. Our IR team responds within minutes — containing, investigating, and recovering your systems.</p>
+      <div class="service-tags"><span class="tag">DFIR</span><span class="tag">Forensics</span><span class="tag">&lt;15min SLA</span></div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">☁️</div>
+      <div class="service-name">Cloud Security</div>
+      <p class="service-desc">Protect your AWS, Azure, or GCP environment with continuous compliance monitoring, misconfiguration alerts, and workload security.</p>
+      <div class="service-tags"><span class="tag">CSPM</span><span class="tag">CWPP</span><span class="tag">Multi-cloud</span></div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🎓</div>
+      <div class="service-name">Security Awareness Training</div>
+      <p class="service-desc">Your team is your biggest vulnerability. Our phishing simulations and training programs turn employees into your strongest defense.</p>
+      <div class="service-tags"><span class="tag">Phishing Sim</span><span class="tag">LMS</span><span class="tag">Compliance</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section class="why-section" id="why">
+  <div class="why-grid">
+    <div class="why-left">
+      <div class="section-tag">Why CyberSentinel</div>
+      <div class="section-title">Security That <span>Never Sleeps</span></div>
+      <p class="section-sub">We combine human expertise with AI-powered tools to deliver protection that adapts to threats as fast as they evolve.</p>
+      <div class="why-features">
+        <div class="why-feat">
+          <div class="feat-icon">⚡</div>
+          <div><div class="feat-name">Sub-second Detection</div><div class="feat-desc">Our AI processes over 10 million events per second with an average threat detection time under 800ms.</div></div>
+        </div>
+        <div class="why-feat">
+          <div class="feat-icon">🌐</div>
+          <div><div class="feat-name">Global Threat Intelligence</div><div class="feat-desc">Real-time feeds from 200+ threat intelligence sources — updated every 60 seconds.</div></div>
+        </div>
+        <div class="why-feat">
+          <div class="feat-icon">🔒</div>
+          <div><div class="feat-name">Zero-Trust Architecture</div><div class="feat-desc">Every access request is verified, every packet inspected. Trust nothing, verify everything.</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="why-right">
+      <div class="terminal">
+        <div class="terminal-bar">
+          <div class="tb-dot" style="background:#ff5f57"></div>
+          <div class="tb-dot" style="background:#ffbd2e"></div>
+          <div class="tb-dot" style="background:#28c840"></div>
+          <span style="font-size:11px;color:var(--text3);margin-left:8px">sentinel@cyberops:~$</span>
+        </div>
+        <div class="terminal-body" id="terminal-body">
+          <div><span class="t-g">✓</span> <span class="t-w">IDS engine initialized</span></div>
+          <div><span class="t-g">✓</span> <span class="t-w">Loading threat signatures</span> <span class="t-g">[14,892 rules]</span></div>
+          <div><span class="t-g">✓</span> <span class="t-w">AI model loaded</span> <span class="t-d">v4.2.1</span></div>
+          <div><span class="t-b">►</span> <span class="t-w">Scanning network</span> <span class="t-d">192.168.1.0/24</span></div>
+          <div><span class="t-r">!</span> <span class="t-r">Threat detected:</span> <span class="t-w">SQLi attempt</span></div>
+          <div><span class="t-d">&nbsp;&nbsp;Source:</span> <span class="t-b">185.220.101.47</span></div>
+          <div><span class="t-g">⛔</span> <span class="t-w">Auto-blocked. Rule 4821 applied.</span></div>
+          <div><span class="t-g">✓</span> <span class="t-w">Alert dispatched to SOC team</span></div>
+          <div><span class="t-d">─────────────────────────────</span></div>
+          <div><span class="t-g">●</span> <span class="t-w">All systems nominal</span> <span class="blink">_</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="section" id="pricing">
+  <div class="section-header">
+    <div class="section-tag">Transparent Pricing</div>
+    <div class="section-title">Choose Your <span>Protection</span> Plan</div>
+    <p class="section-sub">No hidden fees. Cancel anytime. Every plan includes our core threat monitoring and 24/7 support.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-name">Starter</div>
+      <div class="price-amount">$<span>49</span></div>
+      <div class="price-period">per month / up to 25 devices</div>
+      <ul class="price-features">
+        <li>Network monitoring (basic)</li>
+        <li>Vulnerability scan (monthly)</li>
+        <li>Email alerts</li>
+        <li>Security dashboard</li>
+        <li class="no">Incident response</li>
+        <li class="no">AI threat detection</li>
+      </ul>
+      <button class="price-btn price-btn-outline">Get Started</button>
+    </div>
+    <div class="price-card featured">
+      <div class="price-name">Professional</div>
+      <div class="price-amount">$<span>199</span></div>
+      <div class="price-period">per month / up to 200 devices</div>
+      <ul class="price-features">
+        <li>24/7 real-time monitoring</li>
+        <li>Weekly vulnerability scans</li>
+        <li>AI threat detection</li>
+        <li>Incident response (4hr SLA)</li>
+        <li>Cloud security module</li>
+        <li>Priority support</li>
+      </ul>
+      <button class="price-btn price-btn-fill">Get Started</button>
+    </div>
+    <div class="price-card">
+      <div class="price-name">Enterprise</div>
+      <div class="price-amount" style="font-size:28px;padding-top:8px">Custom</div>
+      <div class="price-period">unlimited devices / dedicated SOC</div>
+      <ul class="price-features">
+        <li>Everything in Professional</li>
+        <li>Dedicated security engineer</li>
+        <li>Pen testing (quarterly)</li>
+        <li>15-min incident SLA</li>
+        <li>Custom integrations</li>
+        <li>Compliance reporting</li>
+      </ul>
+      <button class="price-btn price-btn-outline">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="section-tag">Free Security Audit</div>
+  <div class="cta-title">Is Your Network <span>Truly Safe?</span></div>
+  <p class="cta-sub">Get a free 30-minute security audit and discover vulnerabilities in your infrastructure before attackers do.</p>
+  <div class="cta-btns">
+    <a href="#" class="btn-primary">Book Free Audit →</a>
+    <a href="#" class="btn-ghost">Talk to an Expert</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a class="nav-logo" href="#">CYBER<span>SENTINEL</span></a>
+      <p>Enterprise-grade cybersecurity for a connected world. Protecting businesses 24/7 since 2018.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <ul>
+        <li><a href="#">Network Monitoring</a></li>
+        <li><a href="#">Vulnerability Scanning</a></li>
+        <li><a href="#">Incident Response</a></li>
+        <li><a href="#">Cloud Security</a></li>
+        <li><a href="#">Pen Testing</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Our Team</a></li>
+        <li><a href="#">Case Studies</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Careers</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="#">info@cybersentinel.io</a></li>
+        <li><a href="#">+1 (800) 123-4567</a></li>
+        <li><a href="#">24/7 SOC Hotline</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Service</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 CyberSentinel Inc. All rights reserved.</span>
+    <span style="color:var(--green)">● All systems operational</span>
+  </div>
+</footer>
+
+<script>
+// CURSOR
+const cursor=document.getElementById('cursor'),trail=document.getElementById('cursor-trail');
+let mx=0,my=0,tx=0,ty=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=(mx-6)+'px';cursor.style.top=(my-6)+'px';});
+setInterval(()=>{tx+=(mx-tx)*0.15;ty+=(my-ty)*0.15;trail.style.left=(tx-16)+'px';trail.style.top=(ty-16)+'px';},16);
+
+// SLIDER
+let cur=0,auto;
+const slides=document.querySelectorAll('.slide');
+const inds=document.querySelectorAll('.indicator');
+function goSlide(n){
+  slides[cur].classList.remove('active');
+  inds[cur].classList.remove('active');
+  cur=(n+slides.length)%slides.length;
+  slides[cur].classList.add('active');
+  inds[cur].classList.add('active');
+  document.getElementById('slidesWrap').style.transform='translateX(-'+cur*33.333+'%)';
+  document.getElementById('cur-slide').textContent=String(cur+1).padStart(2,'0');
+  resetAuto();
+}
+function changeSlide(d){goSlide(cur+d);}
+function resetAuto(){clearInterval(auto);auto=setInterval(()=>changeSlide(1),5000);}
+resetAuto();
+
+// ORBITING DOTS
+function animateDot(dotId,radius,speed,offset){
+  const dot=document.getElementById(dotId);
+  if(!dot)return;
+  let t=offset||0;
+  setInterval(()=>{
+    t+=speed;
+    const x=Math.cos(t)*radius+190-4;
+    const y=Math.sin(t)*radius+190-4;
+    dot.style.position='absolute';
+    dot.style.left=x+'px';
+    dot.style.top=y+'px';
+  },16);
+}
+animateDot('dot1',160,0.012,0);
+animateDot('dot2',160,0.018,2);
+animateDot('dot3',160,0.015,4);
+
+// COUNTER ANIMATION
+function animateCounter(id,target,suffix,duration){
+  const el=document.getElementById(id);
+  let start=0,step=target/((duration||1500)/16);
+  const iv=setInterval(()=>{
+    start=Math.min(start+step,target);
+    el.textContent=Math.round(start).toLocaleString()+(suffix||'');
+    if(start>=target)clearInterval(iv);
+  },16);
+}
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      animateCounter('s1',50000,'+');
+      animateCounter('s2',500,'+');
+      animateCounter('s3',800,'ms');
+      animateCounter('s4',99.9,'%');
+      obs.disconnect();
+    }
+  });
+},{threshold:0.5});
+obs.observe(document.querySelector('.stats-bar'));
+
+// SCROLL REVEAL
+const revealEls=document.querySelectorAll('.service-card,.why-feat,.price-card');
+const revObs=new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting){
+      setTimeout(()=>{
+        e.target.style.opacity='1';
+        e.target.style.transform='translateY(0)';
+      },i*80);
+      revObs.unobserve(e.target);
+    }
+  });
+},{threshold:0.1});
+revealEls.forEach(el=>{
+  el.style.opacity='0';
+  el.style.transform='translateY(24px)';
+  el.style.transition='opacity 0.6s ease, transform 0.6s ease';
+  revObs.observe(el);
+});
+</script>
+</body>
+</html>
